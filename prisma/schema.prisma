@@ -16,14 +16,19 @@ model User {
   manuals   Manual[]
 }
 
+
 model Manual {
-  id         Int        @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   title      String
   carBrand   String
   fileLink   String
+  localPath  String?
+  fileHash   String?
+  chunksHash String?
+  version    Int          @default(1)
   uploaderId Int
+  uploader   User         @relation(fields: [uploaderId], references: [id])
   favorites  Favorite[]
-  uploader   User       @relation(fields: [uploaderId], references: [id])
 }
 
 model Favorite {

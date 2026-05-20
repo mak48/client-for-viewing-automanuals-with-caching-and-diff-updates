@@ -21,9 +21,13 @@ model Manual {
   title      String
   carBrand   String
   fileLink   String
+  localPath  String?
+  fileHash   String?
+  chunksHash String?
+  version    Int        @default(1)
   uploaderId Int
-  favorites  Favorite[]
   uploader   User       @relation(fields: [uploaderId], references: [id])
+  favorites  Favorite[]
 }
 
 model Favorite {

@@ -2256,11 +2256,13 @@ export namespace Prisma {
 
   export type ManualAvgAggregateOutputType = {
     id: number | null
+    version: number | null
     uploaderId: number | null
   }
 
   export type ManualSumAggregateOutputType = {
     id: number | null
+    version: number | null
     uploaderId: number | null
   }
 
@@ -2269,6 +2271,10 @@ export namespace Prisma {
     title: string | null
     carBrand: string | null
     fileLink: string | null
+    localPath: string | null
+    fileHash: string | null
+    chunksHash: string | null
+    version: number | null
     uploaderId: number | null
   }
 
@@ -2277,6 +2283,10 @@ export namespace Prisma {
     title: string | null
     carBrand: string | null
     fileLink: string | null
+    localPath: string | null
+    fileHash: string | null
+    chunksHash: string | null
+    version: number | null
     uploaderId: number | null
   }
 
@@ -2285,6 +2295,10 @@ export namespace Prisma {
     title: number
     carBrand: number
     fileLink: number
+    localPath: number
+    fileHash: number
+    chunksHash: number
+    version: number
     uploaderId: number
     _all: number
   }
@@ -2292,11 +2306,13 @@ export namespace Prisma {
 
   export type ManualAvgAggregateInputType = {
     id?: true
+    version?: true
     uploaderId?: true
   }
 
   export type ManualSumAggregateInputType = {
     id?: true
+    version?: true
     uploaderId?: true
   }
 
@@ -2305,6 +2321,10 @@ export namespace Prisma {
     title?: true
     carBrand?: true
     fileLink?: true
+    localPath?: true
+    fileHash?: true
+    chunksHash?: true
+    version?: true
     uploaderId?: true
   }
 
@@ -2313,6 +2333,10 @@ export namespace Prisma {
     title?: true
     carBrand?: true
     fileLink?: true
+    localPath?: true
+    fileHash?: true
+    chunksHash?: true
+    version?: true
     uploaderId?: true
   }
 
@@ -2321,6 +2345,10 @@ export namespace Prisma {
     title?: true
     carBrand?: true
     fileLink?: true
+    localPath?: true
+    fileHash?: true
+    chunksHash?: true
+    version?: true
     uploaderId?: true
     _all?: true
   }
@@ -2416,6 +2444,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath: string | null
+    fileHash: string | null
+    chunksHash: string | null
+    version: number
     uploaderId: number
     _count: ManualCountAggregateOutputType | null
     _avg: ManualAvgAggregateOutputType | null
@@ -2443,9 +2475,13 @@ export namespace Prisma {
     title?: boolean
     carBrand?: boolean
     fileLink?: boolean
+    localPath?: boolean
+    fileHash?: boolean
+    chunksHash?: boolean
+    version?: boolean
     uploaderId?: boolean
-    favorites?: boolean | Manual$favoritesArgs<ExtArgs>
     uploader?: boolean | UserDefaultArgs<ExtArgs>
+    favorites?: boolean | Manual$favoritesArgs<ExtArgs>
     _count?: boolean | ManualCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["manual"]>
 
@@ -2454,6 +2490,10 @@ export namespace Prisma {
     title?: boolean
     carBrand?: boolean
     fileLink?: boolean
+    localPath?: boolean
+    fileHash?: boolean
+    chunksHash?: boolean
+    version?: boolean
     uploaderId?: boolean
     uploader?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["manual"]>
@@ -2463,6 +2503,10 @@ export namespace Prisma {
     title?: boolean
     carBrand?: boolean
     fileLink?: boolean
+    localPath?: boolean
+    fileHash?: boolean
+    chunksHash?: boolean
+    version?: boolean
     uploaderId?: boolean
     uploader?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["manual"]>
@@ -2472,13 +2516,17 @@ export namespace Prisma {
     title?: boolean
     carBrand?: boolean
     fileLink?: boolean
+    localPath?: boolean
+    fileHash?: boolean
+    chunksHash?: boolean
+    version?: boolean
     uploaderId?: boolean
   }
 
-  export type ManualOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "carBrand" | "fileLink" | "uploaderId", ExtArgs["result"]["manual"]>
+  export type ManualOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "carBrand" | "fileLink" | "localPath" | "fileHash" | "chunksHash" | "version" | "uploaderId", ExtArgs["result"]["manual"]>
   export type ManualInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    favorites?: boolean | Manual$favoritesArgs<ExtArgs>
     uploader?: boolean | UserDefaultArgs<ExtArgs>
+    favorites?: boolean | Manual$favoritesArgs<ExtArgs>
     _count?: boolean | ManualCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ManualIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2491,14 +2539,18 @@ export namespace Prisma {
   export type $ManualPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Manual"
     objects: {
-      favorites: Prisma.$FavoritePayload<ExtArgs>[]
       uploader: Prisma.$UserPayload<ExtArgs>
+      favorites: Prisma.$FavoritePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title: string
       carBrand: string
       fileLink: string
+      localPath: string | null
+      fileHash: string | null
+      chunksHash: string | null
+      version: number
       uploaderId: number
     }, ExtArgs["result"]["manual"]>
     composites: {}
@@ -2894,8 +2946,8 @@ export namespace Prisma {
    */
   export interface Prisma__ManualClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    favorites<T extends Manual$favoritesArgs<ExtArgs> = {}>(args?: Subset<T, Manual$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     uploader<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    favorites<T extends Manual$favoritesArgs<ExtArgs> = {}>(args?: Subset<T, Manual$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2929,6 +2981,10 @@ export namespace Prisma {
     readonly title: FieldRef<"Manual", 'String'>
     readonly carBrand: FieldRef<"Manual", 'String'>
     readonly fileLink: FieldRef<"Manual", 'String'>
+    readonly localPath: FieldRef<"Manual", 'String'>
+    readonly fileHash: FieldRef<"Manual", 'String'>
+    readonly chunksHash: FieldRef<"Manual", 'String'>
+    readonly version: FieldRef<"Manual", 'Int'>
     readonly uploaderId: FieldRef<"Manual", 'Int'>
   }
     
@@ -4472,6 +4528,10 @@ export namespace Prisma {
     title: 'title',
     carBrand: 'carBrand',
     fileLink: 'fileLink',
+    localPath: 'localPath',
+    fileHash: 'fileHash',
+    chunksHash: 'chunksHash',
+    version: 'version',
     uploaderId: 'uploaderId'
   };
 
@@ -4500,6 +4560,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -4615,9 +4683,13 @@ export namespace Prisma {
     title?: StringFilter<"Manual"> | string
     carBrand?: StringFilter<"Manual"> | string
     fileLink?: StringFilter<"Manual"> | string
+    localPath?: StringNullableFilter<"Manual"> | string | null
+    fileHash?: StringNullableFilter<"Manual"> | string | null
+    chunksHash?: StringNullableFilter<"Manual"> | string | null
+    version?: IntFilter<"Manual"> | number
     uploaderId?: IntFilter<"Manual"> | number
-    favorites?: FavoriteListRelationFilter
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+    favorites?: FavoriteListRelationFilter
   }
 
   export type ManualOrderByWithRelationInput = {
@@ -4625,9 +4697,13 @@ export namespace Prisma {
     title?: SortOrder
     carBrand?: SortOrder
     fileLink?: SortOrder
+    localPath?: SortOrderInput | SortOrder
+    fileHash?: SortOrderInput | SortOrder
+    chunksHash?: SortOrderInput | SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
-    favorites?: FavoriteOrderByRelationAggregateInput
     uploader?: UserOrderByWithRelationInput
+    favorites?: FavoriteOrderByRelationAggregateInput
   }
 
   export type ManualWhereUniqueInput = Prisma.AtLeast<{
@@ -4638,9 +4714,13 @@ export namespace Prisma {
     title?: StringFilter<"Manual"> | string
     carBrand?: StringFilter<"Manual"> | string
     fileLink?: StringFilter<"Manual"> | string
+    localPath?: StringNullableFilter<"Manual"> | string | null
+    fileHash?: StringNullableFilter<"Manual"> | string | null
+    chunksHash?: StringNullableFilter<"Manual"> | string | null
+    version?: IntFilter<"Manual"> | number
     uploaderId?: IntFilter<"Manual"> | number
-    favorites?: FavoriteListRelationFilter
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+    favorites?: FavoriteListRelationFilter
   }, "id">
 
   export type ManualOrderByWithAggregationInput = {
@@ -4648,6 +4728,10 @@ export namespace Prisma {
     title?: SortOrder
     carBrand?: SortOrder
     fileLink?: SortOrder
+    localPath?: SortOrderInput | SortOrder
+    fileHash?: SortOrderInput | SortOrder
+    chunksHash?: SortOrderInput | SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
     _count?: ManualCountOrderByAggregateInput
     _avg?: ManualAvgOrderByAggregateInput
@@ -4664,6 +4748,10 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Manual"> | string
     carBrand?: StringWithAggregatesFilter<"Manual"> | string
     fileLink?: StringWithAggregatesFilter<"Manual"> | string
+    localPath?: StringNullableWithAggregatesFilter<"Manual"> | string | null
+    fileHash?: StringNullableWithAggregatesFilter<"Manual"> | string | null
+    chunksHash?: StringNullableWithAggregatesFilter<"Manual"> | string | null
+    version?: IntWithAggregatesFilter<"Manual"> | number
     uploaderId?: IntWithAggregatesFilter<"Manual"> | number
   }
 
@@ -4771,8 +4859,12 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
-    favorites?: FavoriteCreateNestedManyWithoutManualInput
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     uploader: UserCreateNestedOneWithoutManualsInput
+    favorites?: FavoriteCreateNestedManyWithoutManualInput
   }
 
   export type ManualUncheckedCreateInput = {
@@ -4780,6 +4872,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     uploaderId: number
     favorites?: FavoriteUncheckedCreateNestedManyWithoutManualInput
   }
@@ -4788,8 +4884,12 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
-    favorites?: FavoriteUpdateManyWithoutManualNestedInput
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     uploader?: UserUpdateOneRequiredWithoutManualsNestedInput
+    favorites?: FavoriteUpdateManyWithoutManualNestedInput
   }
 
   export type ManualUncheckedUpdateInput = {
@@ -4797,6 +4897,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     uploaderId?: IntFieldUpdateOperationsInput | number
     favorites?: FavoriteUncheckedUpdateManyWithoutManualNestedInput
   }
@@ -4806,6 +4910,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     uploaderId: number
   }
 
@@ -4813,6 +4921,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
   }
 
   export type ManualUncheckedUpdateManyInput = {
@@ -4820,6 +4932,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     uploaderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -4966,9 +5082,29 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type ManualCountOrderByAggregateInput = {
@@ -4976,11 +5112,16 @@ export namespace Prisma {
     title?: SortOrder
     carBrand?: SortOrder
     fileLink?: SortOrder
+    localPath?: SortOrder
+    fileHash?: SortOrder
+    chunksHash?: SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
   }
 
   export type ManualAvgOrderByAggregateInput = {
     id?: SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
   }
 
@@ -4989,6 +5130,10 @@ export namespace Prisma {
     title?: SortOrder
     carBrand?: SortOrder
     fileLink?: SortOrder
+    localPath?: SortOrder
+    fileHash?: SortOrder
+    chunksHash?: SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
   }
 
@@ -4997,12 +5142,35 @@ export namespace Prisma {
     title?: SortOrder
     carBrand?: SortOrder
     fileLink?: SortOrder
+    localPath?: SortOrder
+    fileHash?: SortOrder
+    chunksHash?: SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
   }
 
   export type ManualSumOrderByAggregateInput = {
     id?: SortOrder
+    version?: SortOrder
     uploaderId?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ManualScalarRelationFilter = {
@@ -5136,6 +5304,12 @@ export namespace Prisma {
     deleteMany?: ManualScalarWhereInput | ManualScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutManualsInput = {
+    create?: XOR<UserCreateWithoutManualsInput, UserUncheckedCreateWithoutManualsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManualsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type FavoriteCreateNestedManyWithoutManualInput = {
     create?: XOR<FavoriteCreateWithoutManualInput, FavoriteUncheckedCreateWithoutManualInput> | FavoriteCreateWithoutManualInput[] | FavoriteUncheckedCreateWithoutManualInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutManualInput | FavoriteCreateOrConnectWithoutManualInput[]
@@ -5143,17 +5317,23 @@ export namespace Prisma {
     connect?: FavoriteWhereUniqueInput | FavoriteWhereUniqueInput[]
   }
 
-  export type UserCreateNestedOneWithoutManualsInput = {
-    create?: XOR<UserCreateWithoutManualsInput, UserUncheckedCreateWithoutManualsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutManualsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type FavoriteUncheckedCreateNestedManyWithoutManualInput = {
     create?: XOR<FavoriteCreateWithoutManualInput, FavoriteUncheckedCreateWithoutManualInput> | FavoriteCreateWithoutManualInput[] | FavoriteUncheckedCreateWithoutManualInput[]
     connectOrCreate?: FavoriteCreateOrConnectWithoutManualInput | FavoriteCreateOrConnectWithoutManualInput[]
     createMany?: FavoriteCreateManyManualInputEnvelope
     connect?: FavoriteWhereUniqueInput | FavoriteWhereUniqueInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutManualsNestedInput = {
+    create?: XOR<UserCreateWithoutManualsInput, UserUncheckedCreateWithoutManualsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManualsInput
+    upsert?: UserUpsertWithoutManualsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutManualsInput, UserUpdateWithoutManualsInput>, UserUncheckedUpdateWithoutManualsInput>
   }
 
   export type FavoriteUpdateManyWithoutManualNestedInput = {
@@ -5168,14 +5348,6 @@ export namespace Prisma {
     update?: FavoriteUpdateWithWhereUniqueWithoutManualInput | FavoriteUpdateWithWhereUniqueWithoutManualInput[]
     updateMany?: FavoriteUpdateManyWithWhereWithoutManualInput | FavoriteUpdateManyWithWhereWithoutManualInput[]
     deleteMany?: FavoriteScalarWhereInput | FavoriteScalarWhereInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutManualsNestedInput = {
-    create?: XOR<UserCreateWithoutManualsInput, UserUncheckedCreateWithoutManualsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutManualsInput
-    upsert?: UserUpsertWithoutManualsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutManualsInput, UserUpdateWithoutManualsInput>, UserUncheckedUpdateWithoutManualsInput>
   }
 
   export type FavoriteUncheckedUpdateManyWithoutManualNestedInput = {
@@ -5289,6 +5461,48 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type FavoriteCreateWithoutUserInput = {
     manual: ManualCreateNestedOneWithoutFavoritesInput
   }
@@ -5311,6 +5525,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     favorites?: FavoriteCreateNestedManyWithoutManualInput
   }
 
@@ -5319,6 +5537,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     favorites?: FavoriteUncheckedCreateNestedManyWithoutManualInput
   }
 
@@ -5380,25 +5602,11 @@ export namespace Prisma {
     title?: StringFilter<"Manual"> | string
     carBrand?: StringFilter<"Manual"> | string
     fileLink?: StringFilter<"Manual"> | string
+    localPath?: StringNullableFilter<"Manual"> | string | null
+    fileHash?: StringNullableFilter<"Manual"> | string | null
+    chunksHash?: StringNullableFilter<"Manual"> | string | null
+    version?: IntFilter<"Manual"> | number
     uploaderId?: IntFilter<"Manual"> | number
-  }
-
-  export type FavoriteCreateWithoutManualInput = {
-    user: UserCreateNestedOneWithoutFavoritesInput
-  }
-
-  export type FavoriteUncheckedCreateWithoutManualInput = {
-    userId: number
-  }
-
-  export type FavoriteCreateOrConnectWithoutManualInput = {
-    where: FavoriteWhereUniqueInput
-    create: XOR<FavoriteCreateWithoutManualInput, FavoriteUncheckedCreateWithoutManualInput>
-  }
-
-  export type FavoriteCreateManyManualInputEnvelope = {
-    data: FavoriteCreateManyManualInput | FavoriteCreateManyManualInput[]
-    skipDuplicates?: boolean
   }
 
   export type UserCreateWithoutManualsInput = {
@@ -5421,20 +5629,22 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutManualsInput, UserUncheckedCreateWithoutManualsInput>
   }
 
-  export type FavoriteUpsertWithWhereUniqueWithoutManualInput = {
+  export type FavoriteCreateWithoutManualInput = {
+    user: UserCreateNestedOneWithoutFavoritesInput
+  }
+
+  export type FavoriteUncheckedCreateWithoutManualInput = {
+    userId: number
+  }
+
+  export type FavoriteCreateOrConnectWithoutManualInput = {
     where: FavoriteWhereUniqueInput
-    update: XOR<FavoriteUpdateWithoutManualInput, FavoriteUncheckedUpdateWithoutManualInput>
     create: XOR<FavoriteCreateWithoutManualInput, FavoriteUncheckedCreateWithoutManualInput>
   }
 
-  export type FavoriteUpdateWithWhereUniqueWithoutManualInput = {
-    where: FavoriteWhereUniqueInput
-    data: XOR<FavoriteUpdateWithoutManualInput, FavoriteUncheckedUpdateWithoutManualInput>
-  }
-
-  export type FavoriteUpdateManyWithWhereWithoutManualInput = {
-    where: FavoriteScalarWhereInput
-    data: XOR<FavoriteUpdateManyMutationInput, FavoriteUncheckedUpdateManyWithoutManualInput>
+  export type FavoriteCreateManyManualInputEnvelope = {
+    data: FavoriteCreateManyManualInput | FavoriteCreateManyManualInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutManualsInput = {
@@ -5463,10 +5673,30 @@ export namespace Prisma {
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type FavoriteUpsertWithWhereUniqueWithoutManualInput = {
+    where: FavoriteWhereUniqueInput
+    update: XOR<FavoriteUpdateWithoutManualInput, FavoriteUncheckedUpdateWithoutManualInput>
+    create: XOR<FavoriteCreateWithoutManualInput, FavoriteUncheckedCreateWithoutManualInput>
+  }
+
+  export type FavoriteUpdateWithWhereUniqueWithoutManualInput = {
+    where: FavoriteWhereUniqueInput
+    data: XOR<FavoriteUpdateWithoutManualInput, FavoriteUncheckedUpdateWithoutManualInput>
+  }
+
+  export type FavoriteUpdateManyWithWhereWithoutManualInput = {
+    where: FavoriteScalarWhereInput
+    data: XOR<FavoriteUpdateManyMutationInput, FavoriteUncheckedUpdateManyWithoutManualInput>
+  }
+
   export type ManualCreateWithoutFavoritesInput = {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     uploader: UserCreateNestedOneWithoutManualsInput
   }
 
@@ -5475,6 +5705,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
     uploaderId: number
   }
 
@@ -5518,6 +5752,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     uploader?: UserUpdateOneRequiredWithoutManualsNestedInput
   }
 
@@ -5526,6 +5764,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     uploaderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -5564,6 +5806,10 @@ export namespace Prisma {
     title: string
     carBrand: string
     fileLink: string
+    localPath?: string | null
+    fileHash?: string | null
+    chunksHash?: string | null
+    version?: number
   }
 
   export type FavoriteUpdateWithoutUserInput = {
@@ -5582,6 +5828,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     favorites?: FavoriteUpdateManyWithoutManualNestedInput
   }
 
@@ -5590,6 +5840,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     favorites?: FavoriteUncheckedUpdateManyWithoutManualNestedInput
   }
 
@@ -5598,6 +5852,10 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     carBrand?: StringFieldUpdateOperationsInput | string
     fileLink?: StringFieldUpdateOperationsInput | string
+    localPath?: NullableStringFieldUpdateOperationsInput | string | null
+    fileHash?: NullableStringFieldUpdateOperationsInput | string | null
+    chunksHash?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
   }
 
   export type FavoriteCreateManyManualInput = {

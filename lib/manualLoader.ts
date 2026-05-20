@@ -55,14 +55,16 @@ class PersistentManualLoader {
         headers['x-chunks-hash'] = cached.chunksHash
       }
     }
-
+console.log('Заголовки запроса:', JSON.stringify(headers))
     const response = await fetch(`/api/manuals/download/${manualId}`, { headers })
 
     if (response.status === 304) {      // 1 достать из хэша
+      console.log('Открылось из кэша IndexedDB, 0 байт скачано')
       return cached!.buffer
     }
 
     if (response.headers.get('x-diff-applied') === 'true') {    // 2 кэш изменился
+      console.log('Применился дифф, скачаны только изменившиеся чанки')
       const diffPackage = await response.json()
       const newBuffer = this.applyDiff(Buffer.from(cached!.buffer), diffPackage)
 
@@ -76,14 +78,13 @@ class PersistentManualLoader {
     }
 
     const buffer = await response.arrayBuffer()
-
+    console.log('Полная загрузка, файл скачан целиком')
     await this.saveToDB(manualId, {             // начальня загрузка
       version: Number(response.headers.get('x-file-version') ?? '1'),
       fileHash: response.headers.get('x-file-hash') ?? '',
       chunksHash: response.headers.get('x-chunks-hash') ?? '',
       buffer
     })
-
     return buffer
   }
   // сохр файл и метаданные в IndexedDB
@@ -92,18 +93,26 @@ class PersistentManualLoader {
       const tx = this.db!.transaction('manuals', 'readwrite')
       const store = tx.objectStore('manuals')
 
+      if (!data.fileHash || data.fileHash === 'null') {
+        console.log('fileHash пустой или null')
+        return
+      }
+
       const payload: DBPayload = {
         id,
         version: data.version,
         fileHash: data.fileHash,
-        chunksHash: data.chunksHash,
+        chunksHash: data.chunksHash || '',
         buffer: data.buffer,
         timestamp: Date.now()
       }
 
       store.put(payload)
 
-      tx.oncomplete = () => resolve()
+      tx.oncomplete = () => {
+        console.log('Сохранено в IndexedDB, id:', id, data.fileHash)
+        resolve()
+      }
       tx.onerror = () => reject(tx.error)
     })
   }
@@ -116,10 +125,13 @@ class PersistentManualLoader {
 
       req.onsuccess = () => {
         const row = req.result as DBPayload | undefined
-        if (!row || !row.buffer) {
+        console.log('Чтение из IndexedDB, id:', id, 'найдено:', !!row)
+        if (!row || !row.buffer || !row.fileHash || row.fileHash === 'null') {
+          console.log('нет fileHash')
           resolve(null)
           return
         }
+
 
         resolve({
           version: row.version,

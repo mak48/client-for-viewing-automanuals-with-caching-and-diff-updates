@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useEffect } from 'react'
+import { persistentLoader } from '@/lib/manualLoader'
 
 interface ManualCardProps {
   manual: {
@@ -20,6 +21,8 @@ export default function ManualCard({ manual }: ManualCardProps) {
   const { isAuthenticated, token } = useAuth()
   const [isFavorite, setIsFavorite] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isOpening, setIsOpening] = useState(false)
+  const [isCached, setIsCached] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated || !token) return
@@ -35,7 +38,26 @@ export default function ManualCard({ manual }: ManualCardProps) {
     })
     .catch(err => console.error(err))
   }, [isAuthenticated, token, manual.id])
+const handleOpenManual = async (e: React.MouseEvent) => {
+  e.preventDefault()
+  setIsOpening(true)
 
+  try {
+    const buffer = await persistentLoader.loadManual(manual.id)
+    
+    setIsCached(true)
+
+    const blob = new Blob([buffer], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank')
+
+    setTimeout(() => URL.revokeObjectURL(url), 60000)
+  } catch (error) {
+    console.error('Ошибка загрузки:', error)
+  } finally {
+    setIsOpening(false)
+  }
+}
   const toggleFavorite = async () => {
     if (!isAuthenticated || !token || loading) return
     
@@ -62,35 +84,62 @@ export default function ManualCard({ manual }: ManualCardProps) {
   }
 
   return (
-    <div className="card relative">
-      <div className="flex justify-between items-start mb-2">
-        <Link href={manual.fileLink}>
-          <h3 className="text-lg font-semibold hover:text-blue-600">
-            {manual.title}
-          </h3>
-        </Link>
-        
-        {isAuthenticated && (
-          <button
-            onClick={toggleFavorite}
-            disabled={loading}
-            className="text-xl hover:scale-110 transition-transform ml-2 flex-shrink-0"
-            title={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-          >
-            {isFavorite ? '⭐' : '☆'}
-          </button>
-        )}
-      </div>
-      <p className="text-gray-600 mb-2"> Загрузил: {manual.uploader.name}. Марка: {manual.carBrand}</p>
-      
-      <div className="flex justify-between items-center">
-        <Link
-          href={manual.fileLink}
-          className="text-blue-600 hover:underline text-sm"
-          target="_blank"
+    <div className="group block">
+      <div
+        className="bg-white rounded-xl overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 border border-border"
+        style={{ borderLeft: '4px solid #D85A30' }}
+      >
+        <div className="px-5 pt-5 pb-4">
+          <div className="flex items-start justify-between mb-4">
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: '#FAECE7' }}
+            >
+            </div>
+            <div className="flex items-center gap-2">
+              {isAuthenticated && (
+                <button
+                  onClick={toggleFavorite}
+                  disabled={loading}
+                  className="text-xl hover:scale-110 transition-transform flex-shrink-0"
+                  title={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+                >
+                  {isFavorite ? '⭐' : '☆'}
+                </button>
+              )}
+            </div>
+          </div>
+
+          <Link href={manual.fileLink}>
+            <h3 className="font-semibold text-[15px] text-gray-900 leading-snug mb-2 hover:text-teal-600 transition-colors">
+              {manual.title}
+            </h3>
+          </Link>
+
+          <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+            <span className="font-medium text-gray-700">{manual.carBrand}</span>
+            <span className="text-gray-300">·</span>
+            <span>{manual.uploader.name}</span>
+          </div>
+        </div>
+
+        <div
+          className="px-5 py-3 flex items-center justify-between border-t border-gray-100"
+          style={{ background: '#F9FAFB' }}
         >
-          📄 Открыть руководство
-        </Link>
+          <button
+            onClick={handleOpenManual}
+            disabled={isOpening}
+            className="text-xs text-gray-400 hover:text-teal-600 transition-colors disabled:opacity-50"
+          >
+            {isOpening 
+              ? '⏳ Загрузка...' 
+              : isCached 
+                ? '📦 Открыть (из кэша)' 
+                : '📄 Открыть руководство'
+            }
+          </button>
+        </div>
       </div>
     </div>
   )

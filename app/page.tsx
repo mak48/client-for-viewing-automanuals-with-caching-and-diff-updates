@@ -85,15 +85,23 @@ export default async function Home() {
 
   return (
     <div>
-      
-      <section className="text-center mb-12 pt-8">
-        <h1 className="text-4xl font-bold mb-4">
-          Инструкции и руководства
-        </h1>
-        <p className="text-xl text-gray-600">
-          по эксплуатации, техническому обслуживанию и ремонту автомобилей
-        </p>
-      </section>
+  <div
+    className="rounded-2xl mb-8 px-8 py-10 relative overflow-hidden"
+    style={{ background: 'linear-gradient(135deg, #712B13 0%, #D85A30 60%, #FAECE7 100%)' }}
+  >
+    <div className="relative z-10 max-w-2xl">
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight mb-3">
+        Инструкции и руководства<br />
+        <span className="text-white/75">по эксплуатации, техническому</span><br />
+        <span className="text-white/75">обслуживанию и ремонту автомобилей</span>
+      </h1>
+      <p className="text-white/70 text-sm mt-4 max-w-lg">
+        Изучите руководства, инструкции и документации по ремонту для множества марок и моделей.
+      </p>
+    </div>
+    <div className="absolute -right-12 -top-12 w-64 h-64 rounded-full opacity-10" style={{ background: '#fff' }} />
+    <div className="absolute -right-4 bottom-0 w-40 h-40 rounded-full opacity-10" style={{ background: '#fff' }} />
+  </div>
 
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4">Недавно добавленные</h2>

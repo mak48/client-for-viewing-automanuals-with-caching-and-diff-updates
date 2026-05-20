@@ -132,6 +132,10 @@ exports.Prisma.ManualScalarFieldEnum = {
   title: 'title',
   carBrand: 'carBrand',
   fileLink: 'fileLink',
+  localPath: 'localPath',
+  fileHash: 'fileHash',
+  chunksHash: 'chunksHash',
+  version: 'version',
   uploaderId: 'uploaderId'
 };
 
@@ -148,6 +152,11 @@ exports.Prisma.SortOrder = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 
 
