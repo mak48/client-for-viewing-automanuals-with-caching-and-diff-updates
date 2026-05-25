@@ -34,14 +34,18 @@ export default function UploadPage() {
 
     try {
       const formDataObj = new FormData()
+      const token = localStorage.getItem('token')
       formDataObj.append('title', formData.title)
       formDataObj.append('carBrand', formData.carBrand)
       formDataObj.append('file', formData.file)
 
       const res = await fetch('/api/upload', {
         method: 'POST',
-        body: formDataObj
-      })
+      headers: {
+        'Authorization': `Bearer ${token}`  // ← добавить
+      },
+      body: formDataObj
+    })
 
       const data = await res.json()
 
