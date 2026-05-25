@@ -1,5 +1,4 @@
 import { DiffSync } from '../lib/diffSync'
-import crypto from 'crypto'
 import { describe, it, expect } from 'vitest'
 
 describe('DiffSync', () => {
@@ -39,16 +38,17 @@ describe('DiffSync', () => {
   })
 
   it('должен правильно применить дифф и восстановить файл', () => {
-    const oldBuffer = Buffer.from('AAAA.BBBB.CCCC.DDDD')
-    const newChunk1 = Buffer.from('XXXX')
-    const newChunk3 = Buffer.from('YYYY')
+    // Каждый чанк ровно 5 байт
+    const oldBuffer = Buffer.from('AAAAABBBBBCCCCCDDDDD') // 20 байт
+    const newChunk1 = Buffer.from('XXXXX') // 5 байт
+    const newChunk3 = Buffer.from('YYYYY') // 5 байт
     
     const chunks = new Map<number, Buffer>()
     chunks.set(1, newChunk1)
     chunks.set(3, newChunk3)
 
     const result = DiffSync.applyDiff(oldBuffer, chunks, 5)
-    const expected = Buffer.from('AAAA.XXXX.CCCC.YYYY')
+    const expected = Buffer.from('AAAAAXXXXXCCCCCYYYYY')
     
     expect(result.equals(expected)).toBe(true)
   })
