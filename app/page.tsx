@@ -1,68 +1,13 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import ManualCard from '@/components/ManualCard'
+import { CAR_BRANDS } from '@/lib/carBrands'
 
 export const revalidate = 3600
 
 export default async function Home() {
-  const carBrands = [
-    { name: 'Acura' },
-    { name: 'Alfa Romeo' },
-    { name: 'Aston Martin' },
-    { name: 'Audi' },
-    { name: 'BMW' },
-    { name: 'BYD' },
-    { name: 'Bugatti' },
-    { name: 'Cadillac' },
-    { name: 'Chevrolet' },
-    { name: 'Citroen' },
-    { name: 'DAF' },
-    { name: 'Dacia' },
-    { name: 'Dodge' },
-    { name: 'FAW' },
-    { name: 'Ferrari' },
-    { name: 'Fiat' },
-    { name: 'Ford' },
-    { name: 'Foton' },
-    { name: 'GMC' },
-    { name: 'Genesis' },
-    { name: 'Haval' },
-    { name: 'Honda' },
-    { name: 'Hyundai' },
-    { name: 'Infiniti' },
-    { name: 'Isuzu' },
-    { name: 'JAC' },
-    { name: 'Jaguar' },
-    { name: 'Jeep' },
-    { name: 'Kia' },
-    { name: 'Lada' },
-    { name: 'Lamborghini' },
-    { name: 'Land Rover' },
-    { name: 'Lexus' },
-    { name: 'Lincoln' },
-    { name: 'MAN' },
-    { name: 'Mazda' },
-    { name: 'McLaren' },
-    { name: 'Mercedes-Benz' },
-    { name: 'Nissan' },
-    { name: 'Opel' },
-    { name: 'Peterbilt' },
-    { name: 'Peugeot' },
-    { name: 'Porsche' },
-    { name: 'Renault' },
-    { name: 'Rivian' },
-    { name: 'SEAT' },
-    { name: 'Scania' },
-    { name: 'Skoda' },
-    { name: 'Subaru' },
-    { name: 'Suzuki' },
-    { name: 'Tesla' },
-    { name: 'Toyota' },
-    { name: 'Volkswagen' },
-    { name: 'Volvo' },
-    { name: 'Другое' }
-  ]
-
+  const carBrands = CAR_BRANDS.map(name => ({ name }))
+  
   const brandCounts = await Promise.all(
     carBrands.map(async (brand) => {
       const count = await prisma.manual.count({

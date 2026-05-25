@@ -18,12 +18,12 @@ body {
     @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(to right, #2563eb, #3b82f6);
+    background: linear-gradient(to right, #D85A30, #ed926b);
     box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
   }
   
   .btn-primary:hover {
-    background: linear-gradient(to right, #1d4ed8, #2563eb);
+    background: linear-gradient(to right, #712B13, #D85A30);
     box-shadow: 0 6px 8px rgba(59, 130, 246, 0.4);
   }
   
@@ -35,8 +35,8 @@ body {
   }
   
   .btn-secondary:hover {
-    border-color: #3b82f6;
-    color: #2563eb;
+    border-color: #ed926b;
+    color: #D85A30;
   }
   
   .card {

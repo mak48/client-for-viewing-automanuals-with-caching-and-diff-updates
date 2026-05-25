@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
+import { CAR_BRANDS } from '@/lib/carBrands'
 
 export default function UploadPage() {
   const router = useRouter()
@@ -37,7 +38,7 @@ export default function UploadPage() {
       formDataObj.append('carBrand', formData.carBrand)
       formDataObj.append('file', formData.file)
 
-      const res = await fetch('/api/manuals/upload', {
+      const res = await fetch('/api/upload', {
         method: 'POST',
         body: formDataObj
       })
@@ -72,7 +73,7 @@ export default function UploadPage() {
               className="input-field"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
-              placeholder="Например: Руководство по ремонту Citroen Berlingo 2011"
+              placeholder="Например: Citroen Berlingo 2011"
             />
           </div>
           
@@ -80,14 +81,19 @@ export default function UploadPage() {
             <label className="block text-sm font-medium mb-2">
               Марка автомобиля
             </label>
-            <input
-              type="text"
+            <select
               required
               className="input-field"
               value={formData.carBrand}
               onChange={(e) => setFormData({...formData, carBrand: e.target.value})}
-              placeholder="Например: Citroen"
-            />
+            >
+              <option value=""></option>
+              {CAR_BRANDS.map((brand) => (
+                <option key={brand} value={brand}>
+                  {brand}
+                </option>
+              ))}
+            </select>
           </div>
           
           <div>

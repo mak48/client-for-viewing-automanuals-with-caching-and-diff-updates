@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useEffect } from 'react'
 import { persistentLoader } from '@/lib/manualLoader'
+import {Wrench, Star} from 'lucide-react';
 
 interface ManualCardProps {
   manual: {
@@ -95,6 +96,7 @@ const handleOpenManual = async (e: React.MouseEvent) => {
               className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
               style={{ background: '#FAECE7' }}
             >
+              <Wrench className="w-5 h-5 text-[#D85A30]"/>
             </div>
             <div className="flex items-center gap-2">
               {isAuthenticated && (
@@ -104,14 +106,18 @@ const handleOpenManual = async (e: React.MouseEvent) => {
                   className="text-xl hover:scale-110 transition-transform flex-shrink-0"
                   title={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
                 >
-                  {isFavorite ? '⭐' : '☆'}
+                  {isFavorite ? (
+                      <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                    ) : (
+                      <Star className="w-5 h-5 text-gray-400" />
+                    )}
                 </button>
               )}
             </div>
           </div>
 
           <Link href={manual.fileLink}>
-            <h3 className="font-semibold text-[15px] text-gray-900 leading-snug mb-2 hover:text-teal-600 transition-colors">
+            <h3 className="font-semibold text-[15px] text-gray-900 leading-snug mb-2 hover:text-[#D85A30] transition-colors">
               {manual.title}
             </h3>
           </Link>
@@ -130,7 +136,7 @@ const handleOpenManual = async (e: React.MouseEvent) => {
           <button
             onClick={handleOpenManual}
             disabled={isOpening}
-            className="text-xs text-gray-400 hover:text-teal-600 transition-colors disabled:opacity-50"
+            className="text-xs text-gray-400 hover:text-[#D85A30] transition-colors disabled:opacity-50"
           >
             {isOpening 
               ? '⏳ Загрузка...' 
