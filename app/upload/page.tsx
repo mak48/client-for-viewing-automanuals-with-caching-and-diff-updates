@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { CAR_BRANDS } from '@/lib/carBrands'
+
+interface ExistingManual {
+  id: number
+  title: string
+  carBrand: string
+  version: number
+}
 
 export default function UploadPage() {
   const router = useRouter()
@@ -15,6 +22,26 @@ export default function UploadPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [uploadMode, setUploadMode] = useState<'new' | 'update'>('new')
+  const [existingManuals, setExistingManuals] = useState<ExistingManual[]>([])
+  const [selectedManualId, setSelectedManualId] = useState<string>('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  useEffect(() => {
+    const fetchManuals = async () => {
+      const token = localStorage.getItem('token')
+      const res = await fetch('/api/manuals/uploaded', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setExistingManuals(data)
+      }
+    }
+    if (isAuthenticated) {
+      fetchManuals()
+    }
+  }, [isAuthenticated])
 
   if (!isAuthenticated) {
     router.push('/login')
@@ -24,28 +51,38 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
 
     if (!formData.file) {
-      setError(' ')
+      setError('Выберите файл')
+      return
+    }
+
+    if (uploadMode === 'update' && !selectedManualId) {
+      setError('Выберите руководство для обновления')
       return
     }
 
     setLoading(true)
 
     try {
-      const formDataObj = new FormData()
       const token = localStorage.getItem('token')
-      formDataObj.append('title', formData.title)
-      formDataObj.append('carBrand', formData.carBrand)
+      const formDataObj = new FormData()
+      formDataObj.append('title', formData.title || '')
+      formDataObj.append('carBrand', formData.carBrand || '')
       formDataObj.append('file', formData.file)
+
+      if (uploadMode === 'update') {
+        formDataObj.append('manualId', selectedManualId)
+      }
 
       const res = await fetch('/api/upload', {
         method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`  // ← добавить
-      },
-      body: formDataObj
-    })
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataObj
+      })
 
       const data = await res.json()
 
@@ -53,7 +90,15 @@ export default function UploadPage() {
         throw new Error(data.error || 'Ошибка загрузки')
       }
 
-      router.push('/profile')
+      if (data.diff) {
+        setSuccessMessage(
+          `Файл обновлён! Версия ${data.diff.version}. `
+        )
+        setFormData({ title: '', carBrand: '', file: null })
+        setSelectedManualId('')
+      } else {
+        router.push('/profile')
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -61,12 +106,79 @@ export default function UploadPage() {
     }
   }
 
+  const handleManualSelect = (manualId: string) => {
+    setSelectedManualId(manualId)
+    const manual = existingManuals.find(m => m.id === parseInt(manualId))
+    if (manual) {
+      setFormData({
+        ...formData,
+        title: manual.title,
+        carBrand: manual.carBrand
+      })
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="card">
         <h1 className="text-2xl font-bold mb-6">Загрузить руководство</h1>
-        
+
+        <div className="flex gap-4 mb-6">
+          <button
+            type="button"
+            onClick={() => {
+              setUploadMode('new')
+              setSelectedManualId('')
+              setFormData({ title: '', carBrand: '', file: null })
+            }}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors ${
+              uploadMode === 'new'
+                ? 'btn-primary text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            📄 Новое руководство
+          </button>
+          <button
+            type="button"
+            onClick={() => setUploadMode('update')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors ${
+              uploadMode === 'update'
+                ? 'btn-primary text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            🔄 Обновить существующее
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
+          {uploadMode === 'update' && (
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Выберите руководство для обновления
+              </label>
+              <select
+                required
+                className="input-field"
+                value={selectedManualId}
+                onChange={(e) => handleManualSelect(e.target.value)}
+              >
+                <option value="">Выберите из списка...</option>
+                {existingManuals.map((manual) => (
+                  <option key={manual.id} value={manual.id}>
+                    {manual.title} (v{manual.version})
+                  </option>
+                ))}
+              </select>
+              {existingManuals.length === 0 && (
+                <p className="text-sm text-gray-500 mt-2">
+                  У вас пока нет загруженных руководств. Сначала загрузите новое.
+                </p>
+              )}
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium mb-2">
               Название руководства
@@ -78,9 +190,10 @@ export default function UploadPage() {
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               placeholder="Например: Citroen Berlingo 2011"
+              disabled={uploadMode === 'update' && !!selectedManualId}
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium mb-2">
               Марка автомобиля
@@ -90,8 +203,9 @@ export default function UploadPage() {
               className="input-field"
               value={formData.carBrand}
               onChange={(e) => setFormData({...formData, carBrand: e.target.value})}
+              disabled={uploadMode === 'update' && !!selectedManualId}
             >
-              <option value=""></option>
+              <option value="">Выберите марку</option>
               {CAR_BRANDS.map((brand) => (
                 <option key={brand} value={brand}>
                   {brand}
@@ -99,10 +213,10 @@ export default function UploadPage() {
               ))}
             </select>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium mb-2">
-              Файл руководства (PDF)
+              {uploadMode === 'update' ? 'Новая версия файла (PDF)' : 'Файл руководства (PDF)'}
             </label>
             <input
               type="file"
@@ -119,12 +233,22 @@ export default function UploadPage() {
             </div>
           )}
 
+          {successMessage && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+              {successMessage}
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || (uploadMode === 'update' && existingManuals.length === 0)}
             className="btn-primary w-full"
           >
-            {loading ? 'Загрузка...' : 'Загрузить руководство'}
+            {loading
+              ? 'Загрузка...'
+              : uploadMode === 'update'
+                ? 'Обновить руководство'
+                : 'Загрузить руководство'}
           </button>
         </form>
       </div>
