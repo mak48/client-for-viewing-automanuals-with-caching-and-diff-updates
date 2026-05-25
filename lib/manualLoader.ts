@@ -1,4 +1,4 @@
-import { DiffSync } from '@/lib/diffSync'
+import { DiffSync } from './diffSync'
 
 interface ManualMeta {
   version: number
@@ -55,16 +55,13 @@ class PersistentManualLoader {
         headers['x-chunks-hash'] = cached.chunksHash
       }
     }
-console.log('Заголовки запроса:', JSON.stringify(headers))
     const response = await fetch(`/api/manuals/download/${manualId}`, { headers })
 
     if (response.status === 304) {      // 1 достать из хэша
-      console.log('Открылось из кэша IndexedDB, 0 байт скачано')
       return cached!.buffer
     }
 
     if (response.headers.get('x-diff-applied') === 'true') {    // 2 кэш изменился
-      console.log('Применился дифф, скачаны только изменившиеся чанки')
       const diffPackage = await response.json()
       const newBuffer = this.applyDiff(Buffer.from(cached!.buffer), diffPackage)
 
@@ -78,7 +75,6 @@ console.log('Заголовки запроса:', JSON.stringify(headers))
     }
 
     const buffer = await response.arrayBuffer()
-    console.log('Полная загрузка, файл скачан целиком')
     await this.saveToDB(manualId, {             // начальня загрузка
       version: Number(response.headers.get('x-file-version') ?? '1'),
       fileHash: response.headers.get('x-file-hash') ?? '',
@@ -94,7 +90,6 @@ console.log('Заголовки запроса:', JSON.stringify(headers))
       const store = tx.objectStore('manuals')
 
       if (!data.fileHash || data.fileHash === 'null') {
-        console.log('fileHash пустой или null')
         return
       }
 
@@ -110,7 +105,6 @@ console.log('Заголовки запроса:', JSON.stringify(headers))
       store.put(payload)
 
       tx.oncomplete = () => {
-        console.log('Сохранено в IndexedDB, id:', id, data.fileHash)
         resolve()
       }
       tx.onerror = () => reject(tx.error)
@@ -125,9 +119,7 @@ console.log('Заголовки запроса:', JSON.stringify(headers))
 
       req.onsuccess = () => {
         const row = req.result as DBPayload | undefined
-        console.log('Чтение из IndexedDB, id:', id, 'найдено:', !!row)
         if (!row || !row.buffer || !row.fileHash || row.fileHash === 'null') {
-          console.log('нет fileHash')
           resolve(null)
           return
         }
