@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
       access: 'public',
       contentType: file.type
     })
-  const localPath = path.join(fileName)
 
   if (manualId) {
     const existingManual = await prisma.manual.findUnique({
@@ -72,7 +71,8 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         carBrand,
-        localPath,
+        fileLink: blob.url,
+      localPath: blob.url,
         fileHash,
         chunksHash: JSON.stringify(chunksHash),
         version: { increment: 1 }
@@ -86,8 +86,8 @@ export async function POST(req: NextRequest) {
     data: {
       title,
       carBrand,
-      fileLink: '',
-      localPath,
+      fileLink: blob.url,
+    localPath: blob.url,
       fileHash,
       chunksHash: JSON.stringify(chunksHash),
       uploaderId: decoded.userId
