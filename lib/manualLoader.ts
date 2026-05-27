@@ -124,7 +124,14 @@ class PersistentManualLoader {
           return
         }
 
-
+      const maxAge = 30 * 24 * 60 * 60 * 1000
+        if (row.timestamp && Date.now() - row.timestamp > maxAge) {
+          const deleteTx = this.db!.transaction('manuals', 'readwrite')
+          const deleteStore = deleteTx.objectStore('manuals')
+          deleteStore.delete(id)
+          resolve(null)
+          return
+        }
         resolve({
           version: row.version,
           fileHash: row.fileHash,
