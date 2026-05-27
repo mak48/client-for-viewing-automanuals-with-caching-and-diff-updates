@@ -4,6 +4,7 @@ import { DiffSync } from '@/lib/diffSync'
 import jwt from 'jsonwebtoken'
 import fs from 'fs/promises'
 import path from 'path'
+import { put } from '@vercel/blob'
 
 export async function POST(req: NextRequest) {
   const token = req.headers.get('authorization')?.replace('Bearer ', '')
@@ -27,12 +28,12 @@ export async function POST(req: NextRequest) {
   const fileHash = DiffSync.hashFile(buffer)
   const chunksHash = DiffSync.hashChunks(buffer)
 
-  const uploadDir = path.join(process.cwd(), 'uploads', 'manuals')
-  await fs.mkdir(uploadDir, { recursive: true })
-  
   const fileName = `${Date.now()}-${file.name}`
-  const localPath = path.join(uploadDir, fileName)
-  await fs.writeFile(localPath, buffer)
+    const blob = await put(fileName, buffer, {
+      access: 'public',
+      contentType: file.type
+    })
+  const localPath = path.join(fileName)
 
   if (manualId) {
     const existingManual = await prisma.manual.findUnique({
@@ -42,6 +43,16 @@ export async function POST(req: NextRequest) {
     if (existingManual?.chunksHash) {
       const oldHashes = JSON.parse(existingManual.chunksHash)
       const changedChunks = DiffSync.diff(oldHashes, chunksHash)
+
+      await prisma.manual.update({
+          where: { id: parseInt(manualId) },
+          data: {
+            fileLink: blob.url,
+            fileHash,
+            chunksHash: JSON.stringify(chunksHash),
+            version: { increment: 1 }
+          }
+        })
 
       return NextResponse.json({
         success: true,

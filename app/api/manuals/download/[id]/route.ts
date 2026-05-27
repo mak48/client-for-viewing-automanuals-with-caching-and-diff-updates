@@ -1,22 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { DiffSync } from '@/lib/diffSync'
-import fs from 'fs/promises'
-import path from 'path'
-
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-console.log('🚀 ЗАПРОС ПОЛУЧЕН')
   const { id } = await params
   const manual = await prisma.manual.findUnique({ where: { id: parseInt(id) } })
-  if (!manual?.localPath) {
+  
+  if (!manual?.fileLink) {
     return NextResponse.json({ error: 'Файл не найден' }, { status: 404 })
-    
   }
-console.log('Отправляю заголовки:', {
-  fileHash: manual.fileHash,
-  chunksHash: manual.chunksHash?.substring(0, 20)
-})
+
   const clientVersion = parseInt(req.headers.get('x-file-version') || '0')
   const clientHash = req.headers.get('x-file-hash')
 
@@ -24,7 +17,11 @@ console.log('Отправляю заголовки:', {
     return new NextResponse(null, { status: 304 })
   }
 
-  const buffer = await fs.readFile(manual.localPath)
+  const response = await fetch(manual.fileLink)
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Файл не найден в хранилище' }, { status: 404 })
+  }
+  const buffer = Buffer.from(await response.arrayBuffer())
 
   if (req.headers.get('x-chunks-hash') && manual.chunksHash) {
     const clientChunks = JSON.parse(req.headers.get('x-chunks-hash')!)
@@ -50,10 +47,7 @@ console.log('Отправляю заголовки:', {
       }
     })
   }
-console.log('Отправляю заголовки:', {
-  fileHash: manual.fileHash,
-  chunksHash: manual.chunksHash?.substring(0, 20)
-})
+
   return new NextResponse(buffer, {
     headers: {
       'Content-Type': 'application/pdf',
